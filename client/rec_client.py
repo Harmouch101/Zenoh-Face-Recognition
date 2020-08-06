@@ -21,6 +21,11 @@ class Zenoh_Obj():
 		self._wk2 = None
 		self._enc_param = [int(cv2.IMWRITE_JPEG_QUALITY),90]
 		self.vid = None
+		self._start = 0
+		self._stop = 0
+		self._frame_length = 0
+		self._count = 0
+		self._delay_file = open("delay.txt", "a+")
 	def create_zen(self):
 		print('Creating a Zenoh object(locator={})...'.format(self._locator))
 		self._zenoh = Zenoh.login(self._locator)
@@ -48,10 +53,12 @@ class Zenoh_Obj():
 			encode_param=[int(cv2.IMWRITE_JPEG_QUALITY),90]
 			is_success, im_buf_arr = cv2.imencode(".jpeg", frame, encode_param)
 			im_buf_str = im_buf_arr.tostring()
+			self._frame_length = len(im_buf_str)
+			self._start = time.time()
 			self._wk1.rt.write_data(self._path1[:-2] + 'snd_img', im_buf_str)
 			#print("Get the image from '{}'...".format(self._path2))
 			#print("Sending query to'{}'...".format(self._path2))
-			time.sleep(0.02)
+			#time.sleep(0.01)
 
 	def listener(self,rname, data, info):
 	    self.Read_Image(data)
@@ -60,6 +67,16 @@ class Zenoh_Obj():
 		if data is None:
 			return
 		im_str = np.fromstring(data,dtype=np.uint8)
+		self._stop = time.time()
+		#print("Sending Rate = {:.2f} KB/sec".format((self._frame_length/abs(self._stop - self._start))/2048))
+		delay = abs(self._stop - self._start)
+		print("delay :{:.2f} ms".format(delay*1000))
+		if self._count < 200 :
+			self._delay_file.write(str(delay*1000) + "\n")
+			self._count += 1
+		if self._count == 200 :
+			self._delay_file.close()
+			self._count = 201 # to make the program enter this condition once
 		Image_Decoded=cv2.imdecode(im_str,1)
 		if self.vid is not None:
 			scale_percent = 200
@@ -75,7 +92,6 @@ class Zenoh_Obj():
 			cv2.imshow('Image', Image_Decoded)
 			if cv2.waitKey(0) & 0xFF == ord("q"):
 				sys.exit(0)
-
 
 
 def Arg_Parse():
@@ -110,7 +126,7 @@ def get_znh_strs(arg_list):
 	return slt1,slt2,locator
 
 def Manipulate(img):
-	scale_percent = 30
+	scale_percent = 33
 	width = int(img.shape[1] * scale_percent / 100)
 	height = int(img.shape[0] * scale_percent / 100)
 	dim = (width, height)
@@ -125,7 +141,6 @@ if __name__ == "__main__":
 	Arg_list = Arg_Parse()
 	slt1,slt2,loc = get_znh_strs(Arg_list)
 	zen_obj = Zenoh_Obj(slt1,slt2,loc)
-
 	if Arg_list["camera"] != None :
 		camera = cv2.VideoCapture(int(Arg_list["camera"]))
 		camera.set(3, 640)
@@ -137,16 +152,20 @@ if __name__ == "__main__":
 				video.release()
 			frame = Manipulate(img)
 			#cv2.imshow('frame', frame)
-			#if cv2.waitKey(0) & 0xFF == ord("q"):
-			#	sys.exit(0)
+			if cv2.waitKey(0) & 0xFF == ord("q"):
+				sys.exit(0)
 			zen_obj.vid = frame
 			zen_obj.snd(frame)
+			if cv2.waitKey(1) & 0xFF == ord("q"):
+				sys.exit(0)
 
 	elif Arg_list["video"] != None and Arg_list["image"] == None:
 		video = cv2.VideoCapture(Arg_list["video"])
 		video.set(3, 640)
 		video.set(4, 480)
 		while True:
+			#start = time.start()
+			fps = video.get(cv2.CAP_PROP_FPS)
 			ret, img = video.read()
 			if img is None:
 				break
@@ -156,12 +175,14 @@ if __name__ == "__main__":
 			#	sys.exit(0)
 			zen_obj.vid = frame
 			zen_obj.snd(frame)
+			time.sleep(1/fps)
+
 
 	elif Arg_list["image"] != None and Arg_list["video"] == None:
 		img = cv2.imread(Arg_list["image"])
 		zen_obj.snd(img)
 	zen_obj._zenoh.logout()
-	cv2.destroyWindow('video') 
+	#cv2.destroyWindow('video') 
 	video.release()
 	sys.exit("Exiting")
 
