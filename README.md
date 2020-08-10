@@ -24,9 +24,9 @@
 	<li> Open your terminal and enter the following command :</li>
 </ul>
 
-	```bash
-	$ ./zenohd.exe -v -p 192.168.1.8
-	```
+```bash
+$ ./zenohd.exe -v -p tcp/192.168.1.8:7447
+```
 
 
 
