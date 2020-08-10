@@ -22,8 +22,11 @@
 			<img src="pics/Capture3.PNG" alt="write the image">
 		</ol>
 		<h2>Install Zenoh on Raspian OS</h2>	
-		<p> Once the Raspberry Pi is up and running, click the following <a href="https://download.eclipse.org/zenoh/zenoh/0.4.2-M1/eclipse-zenoh-0.4.2-M1-Raspbian-9.4-armv7l.tgz">link</a> to download the zenohd executable file</p>
-		<p> Now unpack the archived file in a certain directory.</p>
+		<p> Once the Raspberry Pi is up and running, click the following <a href="https://download.eclipse.org/zenoh/zenoh/0.4.2-M1/eclipse-zenoh-0.4.2-M1-Raspbian-9.4-armv7l.tgz">link</a> to download the zenohd executable file.</p>
+		<ul> 
+			<li> Unpack the archived file in a given directory.</li>
+			<li> Open the folder(bin folder) thatcontains the executable file zenohd.exe.</li>
+			<li> Open your terminal and enter the following command :`./zenohd.exe -v -p 192.168.1.8`</li>
 	</body> 
 </html>
 
