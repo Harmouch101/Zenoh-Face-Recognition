@@ -23,8 +23,8 @@
 	<li> Open the folder(bin folder) thatcontains the executable file zenohd.exe.</li>
 	<li> Open your terminal and enter the following command :</li>
 </ul>
-	``bash
-	$ ./zenohd.exe -v -p 192.168.1.8
-	```
+```
+./zenohd.exe -v -p 192.168.1.8
+```
 
 
