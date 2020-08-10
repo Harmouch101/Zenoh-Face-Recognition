@@ -46,44 +46,45 @@ $ docker image ls      # or $ docker images
 ```
 <p> which will output the following if the image is successfully stored on your local machine :</p>
 
-` REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-eclipse/zenoh       latest              a2056fe06164        7 weeks ago         238MB
-`
+```
+ REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+ eclipse/zenoh       latest              a2056fe06164        7 weeks ago         238MB
+```
 <p> in the beginning, there are no containers on the machine:</p>
 
 ```bash
 $ docker ps 
 ```
-`Output
+```
  CONTAINER ID     IMAGE     COMMAND     CREATED     STATUS     PORTS     NAMES
-`
+```
 <p> to create a container associated with the name <b>zenoh</b>, you need to run the following :</p>
 
 ```bash
 $ sudo docker create -t -i eclipse/zenoh --name zenoh    
 ```
 
-`Output
+```
  CONTAINER ID           IMAGE               COMMAND           CREATED     STATUS          PORTS      NAMES
  ad40926fcae0     eclipse/zenoh:latest  "/entrypoint.sh -v"  3 hours ago  Exited (137) 3h  			 zenoh
-`
+```
 <p> you could also rename the container using the following command :</p>
 
 ```bash
 $ docker rename zenoh zenoh1  
 ```
 
-`Output
+```
  CONTAINER ID           IMAGE               COMMAND           CREATED     STATUS          PORTS      NAMES
- ad40926fcae0     eclipse/zenoh:latest  "/entrypoint.sh -v"  3 hours ago  Exited (137) 3h 			zenoh1
-`
+ ad40926fcae0     eclipse/zenoh:latest  /entrypoint.sh -v  3 hours ago  Exited (137) 3h 			zenoh1
+```
 <p> to start the container, execute the following :</p>
 
 ```bash
 $ docker start -i ad40926fcae0
 ```
 
-`Output
+```
  * Starting database influxd                                             [ OK ] 
  * Starting: /eclipse-zenoh/bin/zenohd.exe -v
 [1597070149.524708][INFO] Running scouting on interface auto
@@ -97,7 +98,7 @@ $ docker start -i ad40926fcae0
 [1597070149.536005][INFO] Loading plugin 'http' from '/eclipse-zenoh/bin/../lib/zenoh-plugin-http.cmxs' with args: '/eclipse-zenoh/bin/../lib/zenoh-plugin-http.cmxs'...
 [1597070149.538216][INFO] [Zhttp] listening on port tcp/0.0.0.0:8000
 [1597070149.538276][INFO] TcpService listening on port tcp/0.0.0.0:7447
-`
+```
 <p> to stop the container, open a new terminal and execute the following :</p>
 
 ```bash
@@ -113,7 +114,7 @@ $ docker run --init -p 7447:7447/tcp -p 7447:7447/udp -p 8000:8000/tcp eclipse/z
 ```bash
 $ docker run --init -p 7447:7447/tcp -p 7447:7447/udp -p 8000:8000/tcp eclipse/zenoh -v -p tcp/192.168.1.4:7447
 ```
-`Output
+```
  * Starting database influxd
    ...done.
  * Starting: /eclipse-zenoh/bin/zenohd.exe -v -p tcp/192.168.1.4:7447
@@ -128,6 +129,5 @@ $ docker run --init -p 7447:7447/tcp -p 7447:7447/udp -p 8000:8000/tcp eclipse/z
 [1597070521.562450][INFO] Loading plugin 'http' from '/eclipse-zenoh/bin/../lib/zenoh-plugin-http.cmxs' with args: '/eclipse-zenoh/bin/../lib/zenoh-plugin-http.cmxs'...
 [1597070521.564825][INFO] [Zhttp] listening on port tcp/0.0.0.0:8000
 [1597070521.565046][INFO] TcpService listening on port tcp/0.0.0.0:7447
-`
-
+```
 <p> to stop the running container, simply press <b>ctrl + c</b> , this is because of --init option which sets <b>ENTRYPOINT</b> to <b>tini</b> and passes the <b>CMD</b> to it.</p>
