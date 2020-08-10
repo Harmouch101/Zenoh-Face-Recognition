@@ -22,8 +22,9 @@
 	<li> Unpack the archived file in a given directory.</li>
 	<li> Open the folder(bin folder) thatcontains the executable file zenohd.exe.</li>
 	<li> Open your terminal and enter the following command :</li>
-``bash
-	$ ./zenohd.exe -v -p 192.168.1.8
-```
+</ul>
+	```bash
+		$ ./zenohd.exe -v -p 192.168.1.8
+	```
 
 
