@@ -44,13 +44,13 @@ $ docker pull eclipse/zenoh:latest
 ```bash
 $ docker image ls      # or $ docker images
 ```
-<p> which will output the following if the image is successfully stored on your local machine :</p>
+<p> Which will output the following if the image is successfully stored on your local machine :</p>
 
 ```
  REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
  eclipse/zenoh       latest              a2056fe06164        7 weeks ago         238MB
 ```
-<p> in the beginning, there are no containers on the machine:</p>
+<p> In the beginning, there are no containers on the machine:</p>
 
 ```bash
 $ docker ps 
@@ -58,7 +58,7 @@ $ docker ps
 ```
  CONTAINER ID     IMAGE     COMMAND     CREATED     STATUS     PORTS     NAMES
 ```
-<p> to create a container associated with the name <b>zenoh</b>, you need to run the following :</p>
+<p> To create a container associated with the name <b>zenoh</b>, you need to run the following :</p>
 
 ```bash
 $ sudo docker create -t -i eclipse/zenoh --name zenoh    
@@ -68,7 +68,7 @@ $ sudo docker create -t -i eclipse/zenoh --name zenoh
  CONTAINER ID           IMAGE               COMMAND           CREATED     STATUS          PORTS      NAMES
  ad40926fcae0     eclipse/zenoh:latest  "/entrypoint.sh -v"  3 hours ago  Exited (137) 3h  			 zenoh
 ```
-<p> you could also rename the container using the following command :</p>
+<p> You could also rename the container using the following command :</p>
 
 ```bash
 $ docker rename zenoh zenoh1  
@@ -78,7 +78,7 @@ $ docker rename zenoh zenoh1
  CONTAINER ID           IMAGE               COMMAND           CREATED     STATUS          PORTS      NAMES
  ad40926fcae0     eclipse/zenoh:latest  /entrypoint.sh -v  3 hours ago  Exited (137) 3h 			zenoh1
 ```
-<p> to start the container, execute the following :</p>
+<p> To start the container, execute the following :</p>
 
 ```bash
 $ docker start -i ad40926fcae0
@@ -99,17 +99,17 @@ $ docker start -i ad40926fcae0
 [1597070149.538216][INFO] [Zhttp] listening on port tcp/0.0.0.0:8000
 [1597070149.538276][INFO] TcpService listening on port tcp/0.0.0.0:7447
 ```
-<p> to stop the container, open a new terminal and execute the following :</p>
+<p> To stop the container, open a new terminal and execute the following :</p>
 
 ```bash
 $ docker stop ad40926fcae0
 ```
-<p> or you could run the docker image <b>eclipse/zenoh</b> using the following :</p>
+<p> Or you could run the docker image <b>eclipse/zenoh</b> using the following :</p>
 
 ```bash
 $ docker run --init -p 7447:7447/tcp -p 7447:7447/udp -p 8000:8000/tcp eclipse/zenoh -v
 ```
-<p> you could also specify the peer, which is in this case, the IP address of the raspberry :</p>
+<p> You could also specify the peer, which is in this case, the IP address of the raspberry :</p>
 
 ```bash
 $ docker run --init -p 7447:7447/tcp -p 7447:7447/udp -p 8000:8000/tcp eclipse/zenoh -v -p tcp/192.168.1.4:7447
@@ -130,4 +130,31 @@ $ docker run --init -p 7447:7447/tcp -p 7447:7447/udp -p 8000:8000/tcp eclipse/z
 [1597070521.564825][INFO] [Zhttp] listening on port tcp/0.0.0.0:8000
 [1597070521.565046][INFO] TcpService listening on port tcp/0.0.0.0:7447
 ```
-<p> to stop the running container, simply press <b>ctrl + c</b> , this is because of --init option which sets <b>ENTRYPOINT</b> to <b>tini</b> and passes the <b>CMD</b> to it.</p>
+<p> To stop the running container, simply press <b>ctrl + c</b> , this is because of --init option which sets <b>ENTRYPOINT</b> to <b>tini</b> and passes the <b>CMD</b> to it.</p>
+<p> This machine will play the role of a server for face recognition.</p>
+<h2>Face Recognition Server Side</h2>
+<p> This project consists of two processes: client and server. The server will train the model for further face recognition, and The client sends, periodically, frames from a webcam or pre-recorded video to storage_1 predefined into zenoh router. The training part is shown in the flowchart below.</p>
+<img src="pics/training.png" alt="training">
+<p> The server receives images to train the model. If the number of images captured for a face a greater than 50, it will signal the client to stop sending samples(frames). The following illustration is a flowchart for the train_server.py script</p>
+<img src="pics/train_server.png" alt="train_server">
+<p> To run the server script, you need to build the zenoh-python API from <a href="https://github.com/Harmouch101/zenoh-python">this repo</a>. you can install it by using the following command:</p>
+
+```bash
+$ pip3 install eclipse-zenoh
+```
+<p> Now you need to clone this repo on your local machine :</p>
+
+```bash
+$ git clone https://github.com/Harmouch101/zenoh-python
+```
+<p> Copy the files available in the server folder of the current repo after cloning it.</p>
+
+```bash
+$ git clone https://github.com/Harmouch101/Zenoh-Face-Recognition
+```
+<p> At this point, you can excecute the following command to train the model:</p>
+
+```bash
+$ python3 train_server.py
+```
+<h2>Face Recognition Client Side (Raspberry Pi)</h2>
