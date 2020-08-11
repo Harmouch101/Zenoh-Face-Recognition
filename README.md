@@ -158,3 +158,24 @@ $ git clone https://github.com/Harmouch101/Zenoh-Face-Recognition
 $ python3 train_server.py
 ```
 <h2>Face Recognition Client Side (Raspberry Pi)</h2>
+<p> On Raspberry pi, make sure that you have <i>git</i> and clone the zenoh-python API repo and this current repo: </p>
+
+```bash
+$ git clone https://github.com/Harmouch101/zenoh-python
+$ git clone https://github.com/Harmouch101/Zenoh-Face-Recognition
+```
+<p> Copy the files available in the client folder into the zenoh-python folder. Then install opencv librairy on the raspberry using the following command: </p>
+
+```bash
+$ pip3 install opencv-contrib-python; sudo apt-get install -y libatlas-base-dev libhdf5-dev libhdf5-serial-dev libatlas-base-dev libjasper-dev  libqtgui4  libqt4-test
+```
+<p> At the moment, you need to install zenoh librairy:</p>
+
+```bash
+$ pip3 install eclipse-zenoh
+```
+<p> At this point, you can excecute the following command to train the model:</p>
+
+```bash
+$ python3 train_client.py
+```
