@@ -152,7 +152,7 @@ $ git clone https://github.com/Harmouch101/zenoh-python
 ```bash
 $ git clone https://github.com/Harmouch101/Zenoh-Face-Recognition
 ```
-<p> At this point, you can excecute the following command to train the model:</p>
+<p> At this point, you can execute the following command to train the model:</p>
 
 ```bash
 $ python3 train_server.py
@@ -164,18 +164,23 @@ $ python3 train_server.py
 $ git clone https://github.com/Harmouch101/zenoh-python
 $ git clone https://github.com/Harmouch101/Zenoh-Face-Recognition
 ```
-<p> Copy the files available in the client folder into the zenoh-python folder. Then install opencv librairy on the raspberry using the following command: </p>
+<p> Copy the files available in the client folder into the zenoh-python folder.</p>
+<img src="pics/rasp_cap0.png" alt="copy train_client.py">
+<img src="pics/rasp_cap1.png" alt="copy train_client.py">
+<p> Then install the OpenCV library on the raspberry using the following command: </p> 
 
 ```bash
 $ pip3 install opencv-contrib-python; sudo apt-get install -y libatlas-base-dev libhdf5-dev libhdf5-serial-dev libatlas-base-dev libjasper-dev  libqtgui4  libqt4-test
 ```
-<p> At the moment, you need to install zenoh librairy:</p>
+<p> Now you need to install zenoh library:</p>
 
 ```bash
 $ pip3 install eclipse-zenoh
 ```
-<p> At this point, you can excecute the following command to train the model:</p>
+<p> At this point, you can execute the following command to train the model:</p>
 
 ```bash
-$ python3 train_client.py
+$ python3 train_client.py -c 0			# id of the webcam or
+$ python3 train_client.py -v video_path	# pre-recorded video
 ```
+
