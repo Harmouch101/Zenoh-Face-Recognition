@@ -157,6 +157,18 @@ $ git clone https://github.com/Harmouch101/Zenoh-Face-Recognition
 ```bash
 $ python3 train_server.py
 ```
+```
+* WARNING : libzenohc.so not found along with zenoh python installation (not present in the wheel?). Try to load it from /usr/local/lib
+Creating a Zenoh object(locator=tcp/127.0.0.1:7447)...
+Adding storage with id train_img and selector /Face/Recognition/train_image/** 
+Adding storage with id id_img and selector /Face/Recognition/id_image/** 
+peer id = bc96b368a5764a5ca4e35512f420ef67
+Creating a Zenoh object(locator=tcp/127.0.0.1:7447)...
+Use Workspace on "/Face/Recognition/train_image/" to get an image
+Use Workspace on "/Face/Recognition/id_image/" get a name
+Declaring Subscriber on '/Face/Recognition/train_image/**'...
+Declaring Subscriber on '/Face/Recognition/id_image/**'...
+```
 <h2>Face Recognition Client Side (Raspberry Pi)</h2>
 <p> On Raspberry pi, make sure that you have <i>git</i> and clone the zenoh-python API repo and this current repo: </p>
 
@@ -180,7 +192,19 @@ $ pip3 install eclipse-zenoh
 <p> At this point, you can execute the following command to train the model:</p>
 
 ```bash
-$ python3 train_client.py -c 0			# id of the webcam or
-$ python3 train_client.py -v video_path	# pre-recorded video
+$ python3 train_client.py -c 0					# id of the webcam or
+$ python3 train_client.py -v video_path					# pre-recorded video
 ```
+<p> The program will ask you to provide the name of the person to train the model: </p>
+
+```
+* WARNING : libzenohc.so not found along with zenoh python installation (not present in the wheel?). Try to load it from /usr/local/lib
+Creating a Zenoh object(locator=tcp/127.0.0.1:7447)...
+Use Workspace on "/Face/Recognition/train_image/" to send training images
+Use Workspace on "/Face/Recognition/id_image/" to send id
+
+ Enter the user name and press <return> ==> 
+```
+<p> Below is the flowchart of the logic of this script:</p>
+<img src="pics/train_client.png.png" alt="train_client flowchart">
 
