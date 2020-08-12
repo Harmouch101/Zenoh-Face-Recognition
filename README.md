@@ -238,3 +238,8 @@ $ jupyter notebook
 <img src="pics/delay0.png" alt="delay between client and server">
 <h3>Transmission Rate Plot</h3>
 <img src="pics/rate0.png" alt="transmission rate between client and server">
+<p> The transmission rate is measured in KB/Sec and the network delay in milliseconds.</p>
+<ul>
+	<li>Average of trans rate : 500 KB/Sec</li>
+	<li>Average of network delay : 30 mSec </li>
+</ul>
