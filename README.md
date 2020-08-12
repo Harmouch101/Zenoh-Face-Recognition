@@ -206,5 +206,5 @@ Use Workspace on "/Face/Recognition/id_image/" to send id
  Enter the user name and press <return> ==> 
 ```
 <p> Below is the flowchart of the logic of this script:</p>
-<img src="pics/train_client.png.png" alt="train_client flowchart">
+<img src="pics/train_client.png" alt="train_client flowchart">
 
