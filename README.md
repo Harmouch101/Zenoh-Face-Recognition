@@ -229,7 +229,7 @@ $ python3 rec_client.py -c 0 			# At the client side(raspberry)
 <p> The raspberry pi will start capturing images from the camera and send it to the server in order to recognize the face available in the pictures and returned back to the client.</p>
 
 <h2>Testing Network Performance</h2>
-<p> In this section, we will measure the network performance such as transmission rate and network delay between the two peers(Raspberry pi and PC): client and server. The <b>rec_client.py</b> script will generate two files <b>rate.txt</b> and <b>delay.txt</b>. Each file contains a time series for the previous parameters(rate and delay). I have used the <b>Plotly</b> library for plotting purposes. Open the <b>plot.ipynb</b> in jupyter notebook interface. The notebook is available under the <b>client</b> folder.</p>
+<p> Our goal in this task is to measure network communication latency(delay) by using a simple method. We count the time from sending a package to receive a package with a response, between the two peers(Raspberry pi and PC): client and server. The <b>rec_client.py</b> script will generate a pair of files <b>rate.txt</b> and <b>delay.txt</b>. Each file contains a time series for the previous parameters(rate and delay). I have used the <b>Plotly</b> library for plotting purposes. Open the <b>plot.ipynb</b> in jupyter notebook interface. The notebook is available under the <b>client</b> folder.</p>
 
 ```bash
 $ jupyter notebook
@@ -244,12 +244,13 @@ $ jupyter notebook
 	<li>Average of network delay : 30 mSec </li>
 </ul>
 <h2>Testing Program Performance on the raspberry</h2>
-<p> In this section, we will measure the program performance such as transmission rate and interprocess communication delay between the two processes: client and server. The <b>rec_client.py</b> script will generate two files <b>rate1.txt</b> and <b>delay1.txt</b>. Each file contains a time series for the previous parameters(rate and delay). Using the previous notebook, you can generate the following graphs:</p>
+<p> In this section, we will measure the program performance, such as throughput and interprocess communication delay between the two processes: client and server. The <b>rec_client.py</b> script will generate two files <b>rate1.txt</b> and <b>delay1.txt</b>. Each file contains a time series for the previous parameters(rate and delay). Using the previous notebook, you can generate the following graphs:</p>
 <h3>Delay Plot</h3>
 <img src="pics/delay1.png" alt="delay between client and server">
 <h3>Transmission Rate Plot</h3>
 <img src="pics/rate1.png" alt="transmission rate between client and server">
 <ul>
-	<li>Average of trans rate : 500 KB/Sec</li>
-	<li>Average of network delay : 7 mSec </li>
+	<li>Throughput average : 500 KB/Sec</li>
+	<li>Inter-Process communication delay : 7 mSec </li>
 </ul>
+<p> Now, we can compute the average network delay(trasmission + propagation) = 30 - 7 = 23 mSec</p>
