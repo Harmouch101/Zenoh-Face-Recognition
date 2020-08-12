@@ -192,8 +192,8 @@ $ pip3 install eclipse-zenoh
 <p> At this point, you can execute the following command to train the model:</p>
 
 ```bash
-$ python3 train_client.py -c 0					# id of the webcam or
-$ python3 train_client.py -v video_path					# pre-recorded video
+$ python3 train_client.py -c 0			# id of the webcam or
+$ python3 train_client.py -v video_path			# pre-recorded video
 ```
 <p> The program will ask you to provide the name of the person to train the model: </p>
 
@@ -205,6 +205,36 @@ Use Workspace on "/Face/Recognition/id_image/" to send id
 
  Enter the user name and press <return> ==> 
 ```
-<p> Below is the flowchart of the logic of this script:</p>
+<p> After that, the client starts sending frames to the server which will take those pictures and train a model for further recognition purposes. The server will prompt the following:</p>
+
+```
+Name Stored in 1
+
+ [INFO] Face training, wait ...
+
+ [INFO] 1 persons trained. Exiting the program 
+
+ [INFO] Quitting the program
+```
+<p> The image below is the flowchart of the logic of this script:</p>
 <img src="pics/train_client.png" alt="train_client flowchart">
 
+<h2>Face Recogition<h2>
+<p> After building a model on the trained samples, you can now start recognizing faces by running the following scripts: </p>
+
+```bash
+$ python3 rec_server.py 			# At the server side
+$ python3 rec_client.py -c 0 			# At the client side(raspberry)
+```
+<p> The raspberry pi will start capturing images from the camera and send it to the server in order to recognize the face available in the pictures and returned back to the client.</p>
+
+<h2>Testing Network Performance<h2>
+<p> In this section, we will measure the network performance such as transmission rate and network delay between the two peers(Raspberry pi and PC): client and server. The <b>rec_client.py</b> script will generate two files <b>rate.txt</b> and <b>delay.txt</b>. Each file contains a time series for the previous parameters(rate and delay). I have used the <b>Plotly</b> library for plotting purposes. Open the <b>plot.ipynb</b> in jupyter notebook interface. The notebook is available under the <b>client</b> folder.</p>
+
+```bash
+$ jupyter notebook
+```
+<h3>Delay Plot<h3>
+<img src="pics/delay0.png" alt="delay between client and server">
+<h3>Transmission Rate Plot<h3>
+<img src="pics/rate0.png" alt="transmission rate between client and server">
