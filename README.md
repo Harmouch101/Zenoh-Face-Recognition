@@ -243,3 +243,13 @@ $ jupyter notebook
 	<li>Average of trans rate : 500 KB/Sec</li>
 	<li>Average of network delay : 30 mSec </li>
 </ul>
+<h2>Testing Program Performance on the raspberry</h2>
+<p> In this section, we will measure the program performance such as transmission rate and interprocess communication delay between the two processes: client and server. The <b>rec_client.py</b> script will generate two files <b>rate1.txt</b> and <b>delay1.txt</b>. Each file contains a time series for the previous parameters(rate and delay). Using the previous notebook, you can generate the following graphs:</p>
+<h3>Delay Plot</h3>
+<img src="pics/delay1.png" alt="delay between client and server">
+<h3>Transmission Rate Plot</h3>
+<img src="pics/rate1.png" alt="transmission rate between client and server">
+<ul>
+	<li>Average of trans rate : 500 KB/Sec</li>
+	<li>Average of network delay : 7 mSec </li>
+</ul>
