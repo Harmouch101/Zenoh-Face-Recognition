@@ -219,7 +219,7 @@ Name Stored in 1
 <p> The image below is the flowchart of the logic of this script:</p>
 <img src="pics/train_client.png" alt="train_client flowchart">
 
-<h2>Face Recogition<h2>
+<h2>Face Recogition</h2>
 <p> After building a model on the trained samples, you can now start recognizing faces by running the following scripts: </p>
 
 ```bash
