@@ -25,7 +25,8 @@ class Zenoh_Obj():
 		self._stop = 0
 		self._frame_length = 0
 		self._count = 0
-		self._delay_file = open("delay.txt", "a+")
+		self._delay_file = open("delay1.txt", "a+")
+		self._rate = open("rate1.txt", "a+")
 	def create_zen(self):
 		print('Creating a Zenoh object(locator={})...'.format(self._locator))
 		self._zenoh = Zenoh.login(self._locator)
@@ -68,15 +69,17 @@ class Zenoh_Obj():
 			return
 		im_str = np.fromstring(data,dtype=np.uint8)
 		self._stop = time.time()
-		#print("Sending Rate = {:.2f} KB/sec".format((self._frame_length/abs(self._stop - self._start))/2048))
-		delay = abs(self._stop - self._start)
+		delay = abs(self._stop - self._start)/2
+		rate = (self._frame_length/abs(self._stop - self._start))/1024 #KB/Sec
+		print("Transmission Rate = {:.2f} KB/sec".format(rate))
 		print("delay :{:.2f} ms".format(delay*1000))
 		if self._count < 200 :
 			self._delay_file.write(str(delay*1000) + "\n")
+			self._rate.write(str(rate) + "\n")
 			self._count += 1
 		if self._count == 200 :
 			self._delay_file.close()
-			self._count = 201 # to make the program enter this condition once
+			self._rate.close()
 		Image_Decoded=cv2.imdecode(im_str,1)
 		if self.vid is not None:
 			scale_percent = 200
@@ -126,7 +129,7 @@ def get_znh_strs(arg_list):
 	return slt1,slt2,locator
 
 def Manipulate(img):
-	scale_percent = 33
+	scale_percent = 20
 	width = int(img.shape[1] * scale_percent / 100)
 	height = int(img.shape[0] * scale_percent / 100)
 	dim = (width, height)
