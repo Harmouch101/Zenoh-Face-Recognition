@@ -219,7 +219,6 @@ Name Stored in 1
 ```
 <p> The image below is the flowchart of the logic of this script:</p>
 <img src="pics/train_client.png" alt="train_client flowchart">
-
 <h2>Face Recogition</h2>
 <p> After building a model on the trained samples, you can now start recognizing faces by running the following scripts: </p>
 
@@ -228,7 +227,7 @@ $ python3 rec_server.py 			# At the server side
 $ python3 rec_client.py -c 0 			# At the client side(raspberry)
 ```
 <p> The raspberry pi will start capturing images from the camera and send it to the server in order to recognize the face available in the pictures and returned back to the client.</p>
-
+<img src="pics/recognition.png" alt="train_client flowchart">
 <h2>Testing Network Performance</h2>
 <p> Our goal in this task is to measure network communication latency(delay) by using a simple method. We count the time from sending a package to receive a package with a response, between the two peers(Raspberry pi and PC): client and server. The <b>rec_client.py</b> script will generate a pair of files <b>rate.txt</b> and <b>delay.txt</b>. Each file contains a time series for the previous parameters(rate and delay). I have used the <b>Plotly</b> library for plotting purposes. Open the <b>plot.ipynb</b> in jupyter notebook interface. The notebook is available under the <b>client</b> folder.</p>
 
