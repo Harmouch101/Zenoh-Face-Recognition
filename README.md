@@ -255,4 +255,4 @@ $ jupyter notebook
 	<li>Inter-Process communication delay : 7 mSec </li>
 </ul>
 <p> Now, we can compute the average network delay(trasmission + propagation) = 30 - 7 = 23 mSec</p>
-<img src="pics/streaming-stored-video-l.jpg" alt="network config">
+<img src="pics/streaming.png" alt="network config">
