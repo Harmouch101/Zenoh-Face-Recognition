@@ -256,5 +256,5 @@ $ jupyter notebook
 </ul>
 <p> Now, we can compute the average network delay(trasmission + propagation) = 30 - 7 = 23 mSec</p>
 <img src="pics/streaming.png" alt="network config">
-<p> We cam also plot the frame rate time series:</p>
+<p> We can also plot the frame rate time series:</p>
 <img src="pics/frame_rate.png" alt="network config">
