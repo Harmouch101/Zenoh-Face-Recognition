@@ -1,5 +1,5 @@
 <h1>Zenoh Face Recognition On Raspberry Pi</h1>
-<img src="pics/montage.png" alt="network config">
+<img src="pics/Montage.png" alt="network config">
 <p>This project implements a face recognition algorithm based on Zenoh API(edge computing) using LBPH algorithm for the recognition part and Viola Jones for the detection part. For more information about these algorithms, please refer to <a href="https://github.com/Harmouch101/Face-Recogntion-Detection">this repo</a>.
 </p>
 <h2>Zenoh API on Raspberry Pi model b+</h2>	
