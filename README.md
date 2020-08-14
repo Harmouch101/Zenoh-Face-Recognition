@@ -257,3 +257,5 @@ $ jupyter notebook
 <img src="pics/streaming.png" alt="network config">
 <p> We can also plot the frame rate time series:</p>
 <img src="pics/frame_rate.png" alt="network config">
+<p> Client playout</p>
+<img src="pics/client_playout.png" alt="client playout">
