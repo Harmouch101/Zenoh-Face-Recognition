@@ -21,7 +21,7 @@
 <p> Once the Raspberry Pi is up and running, click the following <a href="https://download.eclipse.org/zenoh/zenoh/0.4.2-M1/eclipse-zenoh-0.4.2-M1-Raspbian-9.4-armv7l.tgz">link</a> to download the zenohd executable file.</p>
 <ul> 
 	<li> Unpack the archived file in a given directory.</li>
-	<li> Open the folder(bin folder) thatcontains the executable file zenohd.exe.</li>
+	<li> Open the folder(bin folder) that contains the executable file zenohd.exe.</li>
 	<li> Open your terminal and enter the following command :</li>
 </ul>
 
@@ -138,7 +138,7 @@ $ docker run --init -p 7447:7447/tcp -p 7447:7447/udp -p 8000:8000/tcp eclipse/z
 <img src="pics/training.png" alt="training">
 <p> The server receives images to train the model. If the number of images captured for a face a greater than 50, it will signal the client to stop sending samples(frames). The following illustration is a flowchart for the train_server.py script</p>
 <img src="pics/train_server.png" alt="train_server">
-<p> To run the server script, you need to build the zenoh-python API from <a href="https://github.com/Harmouch101/zenoh-python">this repo</a>. you can install it by using the following command:</p>
+<p> To run the server's script, you need to build the zenoh-python API from <a href="https://github.com/Harmouch101/zenoh-python">this repo</a>. you can install it by using the following command:</p>
 
 ```bash
 $ pip3 install eclipse-zenoh
