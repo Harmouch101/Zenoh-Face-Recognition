@@ -219,8 +219,6 @@ $ python3 train_client.py -v video_path			# pre-recorded video
 
 [*] Waiting for a client to connect...
 ```
-<p> The image below is the flowchart of the logic of this script:</p>
-<img src="pics/client_train.png" alt="client Trainer flowchart">
 <h2>Face Recogition</h2>
 <p> After building a model on the trained samples, the zenoh server is waiting for a connection from clients in order to recognize their images</p>
 
