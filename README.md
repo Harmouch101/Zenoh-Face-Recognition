@@ -1,6 +1,6 @@
 <h1>Zenoh Face Recognition On Raspberry Pi</h1>
-<img src="pics/Montage.png" alt="network config">
-<p>This project implements a face recognition algorithm based on Zenoh API(edge computing) using LBPH algorithm for the recognition part and Viola Jones for the detection part. For more information about these algorithms, please refer to <a href="https://github.com/Harmouch101/Face-Recogntion-Detection">this repo</a>.
+<img src="pics/Train_Phase.png" alt="Model Trainer">
+<p>This project implements a face recognition algorithm, based on Zenoh architecture, using LBPH algorithm for the recognition part and Viola Jones for the detection part. For more information about these algorithms, please refer to <a href="https://github.com/Harmouch101/Face-Recogntion-Detection">this repo</a>.
 </p>
 <h2>Zenoh API on Raspberry Pi model b+</h2>	
 <p>At the moment of building this project, the Zenoh API is only compatible with a specific versions of Raspian(Raspbian-9.4-armv7l) which can be downlaoded using <a href="https://downloads.raspberrypi.org/raspbian_full/images/raspbian_full-2019-09-30/">this link</a>
@@ -134,10 +134,10 @@ $ docker run --init -p 7447:7447/tcp -p 7447:7447/udp -p 8000:8000/tcp eclipse/z
 <p> To stop the running container, simply press <b>ctrl + c</b> , this is because of --init option which sets <b>ENTRYPOINT</b> to <b>tini</b> and passes the <b>CMD</b> to it.</p>
 <p> This machine will play the role of a server for face recognition.</p>
 <h2>Face Recognition Server Side</h2>
-<p> This project consists of two processes: client and server. The server will train the model for further face recognition, and The client sends, periodically, frames from a webcam or pre-recorded video to storage_1 predefined into zenoh router. The training part is shown in the flowchart below.</p>
-<img src="pics/training.png" alt="training">
-<p> The server receives images to train the model. If the number of images captured for a face a greater than 50, it will signal the client to stop sending samples(frames). The following illustration is a flowchart for the train_server.py script</p>
-<img src="pics/train_server.png" alt="train_server">
+<p> This project consists of two processes: client and server. The server will train the model for further face recognition, and The client sends, periodically, frames from a webcam or pre-recorded video to /training/Client_Name. The training phase is shown in the flowchart below.</p>
+<img src="pics/Zenoh_Server.png" alt="training">
+<p> The server receives images on /training/* to train the model. If the number of images captured for a face a greater than 50, the client will stop sending images and the server will start the training phase. The following illustration is a flowchart for the training logic for the client.</p>
+<img src="pics/client_train.png" alt="client_train">
 <p> To run the server's script, you need to build the zenoh-python API from <a href="https://github.com/Harmouch101/zenoh-python">this repo</a>. you can install it by using the following command:</p>
 
 ```bash
@@ -156,19 +156,22 @@ $ git clone https://github.com/Harmouch101/Zenoh-Face-Recognition
 <p> At this point, you can execute the following command to train the model:</p>
 
 ```bash
-$ python3 train_server.py
+$ python3 zenoh_server.py
 ```
 ```
-* WARNING : libzenohc.so not found along with zenoh python installation (not present in the wheel?). Try to load it from /usr/local/lib
-Creating a Zenoh object(locator=tcp/127.0.0.1:7447)...
-Adding storage with id train_img and selector /Face/Recognition/train_image/** 
-Adding storage with id id_img and selector /Face/Recognition/id_image/** 
-peer id = bc96b368a5764a5ca4e35512f420ef67
-Creating a Zenoh object(locator=tcp/127.0.0.1:7447)...
-Use Workspace on "/Face/Recognition/train_image/" to get an image
-Use Workspace on "/Face/Recognition/id_image/" get a name
-Declaring Subscriber on '/Face/Recognition/train_image/**'...
-Declaring Subscriber on '/Face/Recognition/id_image/**'...
+[*] Please train your model !!!
+
+[*] Creating a Zenoh object(locator=None)
+
+[*] Use Workspace on "/training/" to train the model
+
+[*] Use Workspace on "/recognition/" to recognize images
+
+[*] Declaring Subscriber on '/training/*'...
+
+[*] Declaring Subscriber on '/recognition/*'...
+
+[*] Waiting for a new client to connect...
 ```
 <h2>Face Recognition Client Side (Raspberry Pi)</h2>
 <p> On Raspberry pi, make sure that you have <i>git</i> and clone the zenoh-python API repo and this current repo: </p>
@@ -177,9 +180,7 @@ Declaring Subscriber on '/Face/Recognition/id_image/**'...
 $ git clone https://github.com/Harmouch101/zenoh-python
 $ git clone https://github.com/Harmouch101/Zenoh-Face-Recognition
 ```
-<p> Copy the files available in the client folder into the zenoh-python folder.</p>
-<img src="pics/rasp_cap0.png" alt="copy train_client.py">
-<img src="pics/rasp_cap1.png" alt="copy train_client.py">
+<p> Copy the files of the client into the zenoh-python folder.</p>
 <p> Then install the OpenCV library on the raspberry using the following command: </p> 
 
 ```bash
@@ -199,35 +200,44 @@ $ python3 train_client.py -v video_path			# pre-recorded video
 <p> The program will ask you to provide the name of the person to train the model: </p>
 
 ```
-* WARNING : libzenohc.so not found along with zenoh python installation (not present in the wheel?). Try to load it from /usr/local/lib
-Creating a Zenoh object(locator=tcp/127.0.0.1:7447)...
-Use Workspace on "/Face/Recognition/train_image/" to send training images
-Use Workspace on "/Face/Recognition/id_image/" to send id
+[*] Creating a Zenoh object(locator=None)...
 
- Enter the user name and press <return> ==> 
+[*] Use Workspace on "/training/" to send training samples
+
+[*] Please enter the user name and press <return> ==>  
 ```
 <p> After that, the client starts sending frames to the server which will take those pictures and train a model for further recognition purposes. The server will prompt the following:</p>
 
 ```
-Name Stored in 1
+[*] Training phase for mahmoud has been started, , please wait a moment...
 
- [INFO] Face training, wait ...
+[*] Creating a training model
 
- [INFO] 1 persons trained. Exiting the program 
+[*] 1 Persons has been trained successfully.
 
- [INFO] Quitting the program
+[*] Exiting the Training Phase
+
+[*] Waiting for a client to connect...
 ```
 <p> The image below is the flowchart of the logic of this script:</p>
-<img src="pics/train_client.png" alt="train_client flowchart">
+<img src="pics/client_train.png" alt="client Trainer flowchart">
 <h2>Face Recogition</h2>
-<p> After building a model on the trained samples, you can now start recognizing faces by running the following scripts: </p>
+<p> After building a model on the trained samples, the zenoh server is waiting for a connection from clients in order to recognize their images</p>
 
 ```bash
-$ python3 rec_server.py 			# At the server side
-$ python3 rec_client.py -c 0 			# At the client side(raspberry)
+$ python3 recognize_client.py -c 0 			# At the client side(raspberry)
 ```
-<p> The raspberry pi will start capturing images from the camera and send it to the server in order to recognize the face available in the pictures and returned back to the client.</p>
-<img src="pics/recognition.png" alt="recognition flowchart">
+```
+[*] Creating a Zenoh object(locator=None)...
+
+[*] Please enter the camera id and press <return> ==> 1
+
+[*] Sending an image to  /recognition/camera-1
+
+[*] Receiving a recognized image !
+```
+<p> The program will ask for a unique id for the client, then the raspberry pi will start capturing images from the camera and send it to the server in order to recognize the face available in the pictures and returned back to the client.</p>
+<img src="pics/Recognize_Phase.png" alt="Recognize_Phase flowchart">
 <h2>Testing Network Performance</h2>
 <p> Our goal in this task is to measure network communication latency(delay) by using a simple method. We count the time from sending a packet to receive a packet with a response, between the two peers(Raspberry pi and PC): client and server. The <b>rec_client.py</b> script will generate a pair of files <b>rate.txt</b> and <b>delay.txt</b>. Each file contains a time series for the previous parameters(rate and delay). I have used the <b>Plotly</b> library for plotting purposes. Open the <b>delay_rate.ipynb</b> in jupyter notebook interface. The notebook is available under the <b>client</b> folder.</p>
 
