@@ -14,7 +14,12 @@ class Zenoh_Object():
 		self._zenoh = None
 		self._frame = None
 		self._wk = None
-		self._Count = 0
+		self._count = 0
+		self._start = 0
+		self._stop = 0
+		self._frame_length = 0
+		self._delay_file = open("delay1.txt", "a+")
+		self._rate = open("rate1.txt", "a+")
 	def create_zenoh(self):
 		print('\n[*] Creating a Zenoh object(locator={})...'.format(self._locator))
 		self._zenoh = Zenoh.login(self._locator)
@@ -31,7 +36,19 @@ class Zenoh_Object():
 			if image is None:
 				return
 			image_array = np.fromstring(bytes(image.get_value()),dtype=np.uint8)
-			self._decoded_image = cv2.imdecode(image_array,1)
+			self._stop = time.time()
+			delay = abs(self._stop - self._start)
+			rate = (self._frame_length/abs(self._stop - self._start))/1024 #KB/Sec
+			print("\n[*] Transmission Rate = {:.2f} KB/sec".format(rate))
+			print("\n[*] Network Latency :{:.2f} ms".format(delay*1000))
+			if self._count < 200 :
+				self._delay_file.write(str(delay*1000) + "\n")
+				self._rate.write(str(rate) + "\n")
+				self._count += 1
+			if self._count == 200 :
+				self._delay_file.close()
+				self._rate.close()
+				self._decoded_image = cv2.imdecode(image_array,1)
 			cv2.imshow('Received Images', self._decoded_image)
 			if cv2.waitKey(1) & 0xFF == ord("q"):
 				sys.exit(0)
@@ -43,6 +60,20 @@ class Zenoh_Object():
 		encode_param=[int(cv2.IMWRITE_JPEG_QUALITY),90]
 		is_success, im_buf_arr = cv2.imencode(".jpeg", frame, encode_param)
 		im_buf_str = im_buf_arr.tobytes()
+		self._frame_length = len(im_buf_str
+				self._stop = time.time()
+		delay = abs(self._stop - self._start)/2
+		rate = (self._frame_length/abs(self._stop - self._start))/1024 #KB/Sec
+		print("Transmission Rate = {:.2f} KB/sec".format(rate))
+		print("delay :{:.2f} ms".format(delay*1000))
+		if self._count < 200 :
+			self._delay_file.write(str(delay*1000) + "\n")
+			self._rate.write(str(rate) + "\n")
+			self._count += 1
+		if self._count == 200 :
+			self._delay_file.close()
+			self._rate.close())
+		self._start = time.time()
 		self._wk.put(self._recognize_selector + self._camera_id, Value(im_buf_str, Encoding.RAW))
 		#time.sleep(0.005)
 def Manipulate(img):
