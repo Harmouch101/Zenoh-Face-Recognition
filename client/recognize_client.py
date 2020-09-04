@@ -60,19 +60,7 @@ class Zenoh_Object():
 		encode_param=[int(cv2.IMWRITE_JPEG_QUALITY),90]
 		is_success, im_buf_arr = cv2.imencode(".jpeg", frame, encode_param)
 		im_buf_str = im_buf_arr.tobytes()
-		self._frame_length = len(im_buf_str
-				self._stop = time.time()
-		delay = abs(self._stop - self._start)/2
-		rate = (self._frame_length/abs(self._stop - self._start))/1024 #KB/Sec
-		print("Transmission Rate = {:.2f} KB/sec".format(rate))
-		print("delay :{:.2f} ms".format(delay*1000))
-		if self._count < 200 :
-			self._delay_file.write(str(delay*1000) + "\n")
-			self._rate.write(str(rate) + "\n")
-			self._count += 1
-		if self._count == 200 :
-			self._delay_file.close()
-			self._rate.close())
+		self._frame_length = len(im_buf_str)
 		self._start = time.time()
 		self._wk.put(self._recognize_selector + self._camera_id, Value(im_buf_str, Encoding.RAW))
 		#time.sleep(0.005)
