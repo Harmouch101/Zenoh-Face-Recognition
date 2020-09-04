@@ -104,11 +104,6 @@ class Trainer():
 		print("\n[*] {0} Persons has been trained successfully.".format (len (np.unique (ids))))
 		print("\n[*] Exiting the Training Phase")
 
-	def Get_UserName(self,ID, conf):
-		if not ID > 0:
-			return " Face Not Recognised "
-		return "Name: " + self.FileRead()[ID -1] +"; confidence: " + (str(round(conf)) )          
-
 class Zenoh_Object():
 	def __init__(self,train_selector,recognize_selector,locator):
 		self._train_selector = train_selector

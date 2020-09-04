@@ -9,7 +9,6 @@ class Zenoh_Object():
 		self._recognize_selector = recognize_selector
 		self._locator = locator
 		self._enc_param = [int(cv2.IMWRITE_JPEG_QUALITY),90]
-		self._decoded_image = None
 		self._camera_id = ''
 		self._zenoh = None
 		self._frame = None
@@ -36,6 +35,7 @@ class Zenoh_Object():
 			if image is None:
 				return
 			image_array = np.fromstring(bytes(image.get_value()),dtype=np.uint8)
+			decoded_image = cv2.imdecode(image_array,1)
 			self._stop = time.time()
 			delay = abs(self._stop - self._start)
 			rate = (self._frame_length/abs(self._stop - self._start))/1024 #KB/Sec
@@ -48,8 +48,7 @@ class Zenoh_Object():
 			if self._count == 200 :
 				self._delay_file.close()
 				self._rate.close()
-				self._decoded_image = cv2.imdecode(image_array,1)
-			cv2.imshow('Received Images', self._decoded_image)
+			cv2.imshow('Received Images', decoded_image)
 			if cv2.waitKey(1) & 0xFF == ord("q"):
 				sys.exit(0)
 
@@ -65,7 +64,7 @@ class Zenoh_Object():
 		self._wk.put(self._recognize_selector + self._camera_id, Value(im_buf_str, Encoding.RAW))
 		#time.sleep(0.005)
 def Manipulate(img):
-	scale_percent = 30
+	scale_percent = 20
 	width = int(img.shape[1] * scale_percent / 100)
 	height = int(img.shape[0] * scale_percent / 100)
 	dim = (width, height)
