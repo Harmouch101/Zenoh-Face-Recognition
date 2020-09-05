@@ -136,7 +136,7 @@ $ docker run --init -p 7447:7447/tcp -p 7447:7447/udp -p 8000:8000/tcp eclipse/z
 <p> This machine will play the role of a server for face recognition.</p>
 <h2>Face Recognition Server Side on a PC or laptop</h2>
 <p> This project consists of two processes: client and server. The server will train the model for further face recognition, and The client sends, periodically, frames from a webcam or pre-recorded video to '/training/Client_Name'. The training and recognition phases of the server are shown in the flowchart below.</p>
-Server_Clients.png
+<img src="pics/Zenoh_Server0.png" alt="client train flowchart">
 <p> The server receives images on /training/* to train the model. If the number of images captured for a face a greater than 50, the client will stop sending images and the server will start the training phase. The following illustration is a flowchart for the training logic for the client.</p>
 <img src="pics/client_train.png" alt="client train flowchart">
 <p> To run the server's script, you need to build the zenoh-python API from <a href="https://github.com/Harmouch101/zenoh-python">this repo</a>. you can install it by using the following command:</p>
@@ -236,9 +236,9 @@ $ python3 recognize_client.py -c 0 			# At the client side(raspberry)
 [*] Receiving a recognized image !
 ```
 <p> The program will ask for a unique id for the client, then the raspberry pi will start capturing images from the camera and send it to the server in order to recognize the face available in the pictures and returned back to the client.</p>
-<img src="pics/Recognize_Phase0.png" alt="Recognize Phase flowchart model 1">
+<img src="pics/Recognize_Phase0.png" title="Recognize Phase flowchart model 1">
 <p> The following image will give you a high overview on the sytem workflow</p>
-<img src="pics/Server_Clients.png" alt="System Workflow">
+<img src="pics/Server_Clients.png" title="System Workflow">
 <h2>Testing Network Performance</h2>
 <p> Our goal in this task is to measure network communication latency(delay) by using a simple method. We count the time from sending a packet to receive a packet with a response, between the two peers(Raspberry pi and PC): client and server. The <b>recognize_client.py</b> script will generate a pair of files <b>rate.txt</b> and <b>delay.txt</b>. Each file contains a time series for the previous parameters(rate and delay). I have used the <b>Plotly</b> library for plotting purposes. Open the <b>delay_rate.ipynb</b> in jupyter notebook interface. The notebook is available under the <b>client</b> folder.</p>
 
