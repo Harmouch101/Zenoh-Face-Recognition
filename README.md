@@ -1,9 +1,9 @@
 <h1>Zenoh Face Recognition On Raspberry Pi</h1>
 <img src="pics/Train_Phase0.png" title="First Model Trainer">
-<p>This project is a computer vision system control based on Zenoh pub/Sub architecture. the machine learning algorihms used in this project are : the Viola Jones algorithm for face detection, and the local binairy pattern histograms(LBPH) for face recognition. For more information about these algorithms, please refer to <a href="https://github.com/Harmouch101/Face-Recogntion-Detection">this repo</a>.
+<p> This project is a computer vision system control based on Zenoh pub/Sub architecture. the machine learning algorithms used in this project are: the Viola-Jones algorithm for face detection and the local binary pattern histograms(LBPH) for face recognition. For more information about these algorithms, please refer to <a href="https://github.com/Harmouch101/Face-Recogntion-Detection">this repo</a>.
 </p>
 <h2>Zenoh API on Raspberry Pi model b+</h2>	
-<p> To implement this project, you need to have at least 2 raspberry pi 3 model b+ and a raspberry py camera model V2. At the moment of building this project, the Zenoh API is only compatible with a specific versions of Raspian(Raspbian-9.4-armv7l) which can be downlaoded using <a href="https://downloads.raspberrypi.org/raspbian_full/images/raspbian_full-2019-09-30/">this link</a>
+<p> To implement the main control system, you need to have at least 2 raspberry pi 3 model b+ and a raspberry py camera model V2. At the moment of building this project, the Zenoh API is only compatible with a specific version of Raspian(Raspbian-9.4-armv7l) which can be downloaded using <a href="https://downloads.raspberrypi.org/raspbian_full/images/raspbian_full-2019-09-30/">this link</a>
 </p>
 <h2>Writing The Raspian image to a microSD card</h2>	
 <ol>
@@ -30,7 +30,7 @@
 $ ./zenohd.exe -v -p tcp/192.168.1.8:7447	# 192.168.1.8 is the ip address of the other peer(pc).
 ```
 <p> This will run zenoh daemon on your raspberry and connect to the "192.168.1.8" peer, which, by default, is listening on port 7447 for zenoh communication. One raspberry will play the role of a zenoh client, and on another raspberry(or a pc if you don't want to implement the control system), there is a zenoh server.</p>
-<h2> Part One : Use a PC, with ubuntu desktop distro, to configure it as a zenoh server</h2>
+<h2> Part One : Using a PC, with ubuntu desktop distro, to configure it as a zenoh server</h2>
 <p> For the sake of simplicity, zenoh is available in a docker image which we will use it in our project. So first make sure that <a href="https://docs.docker.com/engine/install/ubuntu/">docker</a> is available on your machine by executing the following command:</p>
 
 ```bash
@@ -273,7 +273,7 @@ $ jupyter notebook
 <h2> Part Two : Use another raspberry pi to configure it as a zenoh server</h2>
 <p> The figure below shows the train phase of our control vision system built with rasberry pi's that makes a zenoh network</p>
 <img src="pics/Train_Phase1.png" title="Train Phase Raspberry">
-<p> Our control vision system components are : at least Two Raspberry PIs 3 model b+ with are configured in the same way as the the part one show. we need also a servo motor, and a led light. The following image represents the circuit diagram of our zenoh server which consists of 3 components: rapspberry, servo and LED</p>
+<p> Our control vision system components are: at least Two Raspberry PIs 3 model b+ with are configured in the same way as the part one show. we need also a servo motor and a LED light. The following image represents the circuit diagram of our zenoh server which consists of 3 components: raspberry, servo and LED</p>
 <img src="pics/circuit_diagram.png" title="Zenoh Server Circuit Diagram">
 <p> On both client and server sides, After configuring and building zenoh for both devices, you need to run the zenoh daemon in order to make zenoh api calls :</p>
 
@@ -283,8 +283,8 @@ $ ./zenohd.exe -v -p tcp/192.168.1.5:7447	# 192.168.1.5 is the ip address of one
 ```bash
 $ ./zenohd.exe -v -p tcp/192.168.1.6:7447	# 192.168.1.6 is the ip address of the other peer(client for exemple).
 ```
-<p> Our zenoh network is built successfully. Now you need to run your scripts in order to test the control system which works like the following: if a face is being recognized, the raspberry will send a command to the servo to rotate(open a door simulation) and keep opening for 11 seconds. After that the servo will rotate in the other direction simulating a door close.</p>
-<p> Now, lets run the following script at the server side:</p>
+<p> Our zenoh network is built successfully. Now you need to run your scripts in order to test the control system which works like the following: if a face is being recognized, the raspberry will send a command to the servo to rotate(open a door simulation) and keep opening for 11 seconds. After that, the servo will rotate in the other direction simulating a door close.</p>
+<p> Now, lets run the following script at the server side terminal:</p>
 
 ```bash
 $ python3 zenoh_server_pi
@@ -306,7 +306,7 @@ $ python3 zenoh_server_pi
 
 [*] Waiting for a new client to connect...
 ```
-<p> Now the server is waiting for a client to connect in order to train the model for further recognition purposes. On the other rasberry pi, open your terminal and enter the following command to run the script of the client in order to capture images from the raspberry camera and send them to the server to run the training phase of our model :</p>
+<p> Now the server is waiting for a client to connect in order to train the model for further recognition purposes. On the other raspberry pi, open your terminal and enter the following command to run the script of the client in order to capture images from the raspberry camera and send them to the server to run the training phase of our model :</p>
 
 ```bash
 $ python3 client_train -c 0
