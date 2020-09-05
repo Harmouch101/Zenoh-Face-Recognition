@@ -1,23 +1,24 @@
 <h1>Zenoh Face Recognition On Raspberry Pi</h1>
-<img src="pics/Train_Phase.png" alt="Model Trainer">
-<p>This project implements a face recognition algorithm, based on Zenoh architecture, using LBPH algorithm for the recognition part and Viola Jones for the detection part. For more information about these algorithms, please refer to <a href="https://github.com/Harmouch101/Face-Recogntion-Detection">this repo</a>.
+<img src="pics/Train_Phase0.png" title="First Model Trainer">
+<p>This project is a computer vision system control based on Zenoh pub/Sub architecture. the machine learning algorihms used in this project are : the Viola Jones algorithm for face detection, and the local binairy pattern histograms(LBPH) for face recognition. For more information about these algorithms, please refer to <a href="https://github.com/Harmouch101/Face-Recogntion-Detection">this repo</a>.
 </p>
 <h2>Zenoh API on Raspberry Pi model b+</h2>	
-<p>At the moment of building this project, the Zenoh API is only compatible with a specific versions of Raspian(Raspbian-9.4-armv7l) which can be downlaoded using <a href="https://downloads.raspberrypi.org/raspbian_full/images/raspbian_full-2019-09-30/">this link</a>
+<p> To implement this project, you need to have at least 2 raspberry pi 3 model b+ and a raspberry py camera model V2. At the moment of building this project, the Zenoh API is only compatible with a specific versions of Raspian(Raspbian-9.4-armv7l) which can be downlaoded using <a href="https://downloads.raspberrypi.org/raspbian_full/images/raspbian_full-2019-09-30/">this link</a>
 </p>
 <h2>Writing The Raspian image to a microSD card</h2>	
 <ol>
 	<li> Connect the SD card to your PC.</li>
 	<li> Format your memory card. For example, on windows, simply right click on the sd card icon and click format.</li>
-	<img src="pics/Capture0.png" alt="format">
+	<img src="pics/Capture0.png" title="format an SD Card">
 	<li> Unpack the downloaded ZIP archive, downloaded previously, to any location on your computer.</li>
 	<li> Download and install <a href="https://github.com/pbatard/rufus">Rufus</a> utility to write images to microSD on your computer.</li>
 	<li> Run the Rufus program and write raspian image on the sd card.</li>
-	<img src="pics/Capture1.PNG" alt="rufus">
-	<img src="pics/Capture2.PNG" alt="select the iso file">
-	<img src="pics/Capture3.PNG" alt="write the image">
+	<img src="pics/Capture1.PNG" title="rufus">
+	<img src="pics/Capture2.PNG" title="select the iso file">
+	<img src="pics/Capture3.PNG" title="write the image">
 </ol>
-<h2>Install Zenoh on Raspian OS</h2>	
+<h2>Install Zenoh on Raspian OS</h2>
+<img src="pics/Zenoh_Client_Rasp.png" title="zenoh client raspberry pi with camera model v2">
 <p> Once the Raspberry Pi is up and running, click the following <a href="https://download.eclipse.org/zenoh/zenoh/0.4.2-M1/eclipse-zenoh-0.4.2-M1-Raspbian-9.4-armv7l.tgz">link</a> to download the zenohd executable file.</p>
 <ul> 
 	<li> Unpack the archived file in a given directory.</li>
@@ -28,8 +29,8 @@
 ```bash
 $ ./zenohd.exe -v -p tcp/192.168.1.8:7447	# 192.168.1.8 is the ip address of the other peer(pc).
 ```
-<p> This will run zenoh daemon on your raspberry and connect to the "192.168.1.8" peer, which, by default, is listening on port 7447 for zenoh communication. The raspberry will play the role of a client, and on another pc, there is a zenoh server.</p>
-<h2>Install Zenoh on a Linux distro(ubuntu in my case)</h2>
+<p> This will run zenoh daemon on your raspberry and connect to the "192.168.1.8" peer, which, by default, is listening on port 7447 for zenoh communication. One raspberry will play the role of a zenoh client, and on another raspberry(or a pc if you don't want to implement the control system), there is a zenoh server.</p>
+<h2> Part One : Use a PC, with ubuntu desktop distro, to configure it as a zenoh server</h2>
 <p> For the sake of simplicity, zenoh is available in a docker image which we will use it in our project. So first make sure that <a href="https://docs.docker.com/engine/install/ubuntu/">docker</a> is available on your machine by executing the following command:</p>
 
 ```bash
@@ -133,11 +134,11 @@ $ docker run --init -p 7447:7447/tcp -p 7447:7447/udp -p 8000:8000/tcp eclipse/z
 ```
 <p> To stop the running container, simply press <b>ctrl + c</b> , this is because of --init option which sets <b>ENTRYPOINT</b> to <b>tini</b> and passes the <b>CMD</b> to it.</p>
 <p> This machine will play the role of a server for face recognition.</p>
-<h2>Face Recognition Server Side</h2>
-<p> This project consists of two processes: client and server. The server will train the model for further face recognition, and The client sends, periodically, frames from a webcam or pre-recorded video to /training/Client_Name. The training phase is shown in the flowchart below.</p>
-<img src="pics/Zenoh_Server.png" alt="training">
+<h2>Face Recognition Server Side on a PC or laptop</h2>
+<p> This project consists of two processes: client and server. The server will train the model for further face recognition, and The client sends, periodically, frames from a webcam or pre-recorded video to '/training/Client_Name'. The training and recognition phases of the server are shown in the flowchart below.</p>
+Server_Clients.png
 <p> The server receives images on /training/* to train the model. If the number of images captured for a face a greater than 50, the client will stop sending images and the server will start the training phase. The following illustration is a flowchart for the training logic for the client.</p>
-<img src="pics/client_train.png" alt="client_train">
+<img src="pics/client_train.png" alt="client train flowchart">
 <p> To run the server's script, you need to build the zenoh-python API from <a href="https://github.com/Harmouch101/zenoh-python">this repo</a>. you can install it by using the following command:</p>
 
 ```bash
@@ -148,7 +149,7 @@ $ pip3 install eclipse-zenoh
 ```bash
 $ git clone https://github.com/Harmouch101/zenoh-python
 ```
-<p> Copy the files available in the server folder of the current repo after cloning it.</p>
+<p> Copy the file ('zenoh_server_pc.py') available in the server folder of the current repo after cloning it.</p>
 
 ```bash
 $ git clone https://github.com/Harmouch101/Zenoh-Face-Recognition
@@ -156,7 +157,7 @@ $ git clone https://github.com/Harmouch101/Zenoh-Face-Recognition
 <p> At this point, you can execute the following command to train the model:</p>
 
 ```bash
-$ python3 zenoh_server.py
+$ python3 zenoh_server_pc.py
 ```
 ```
 [*] Please train your model !!!
@@ -235,7 +236,9 @@ $ python3 recognize_client.py -c 0 			# At the client side(raspberry)
 [*] Receiving a recognized image !
 ```
 <p> The program will ask for a unique id for the client, then the raspberry pi will start capturing images from the camera and send it to the server in order to recognize the face available in the pictures and returned back to the client.</p>
-<img src="pics/Recognize_Phase.png" alt="Recognize_Phase flowchart">
+<img src="pics/Recognize_Phase0.png" alt="Recognize Phase flowchart model 1">
+<p> The following image will give you a high overview on the sytem workflow</p>
+<img src="pics/Server_Clients.png" alt="System Workflow">
 <h2>Testing Network Performance</h2>
 <p> Our goal in this task is to measure network communication latency(delay) by using a simple method. We count the time from sending a packet to receive a packet with a response, between the two peers(Raspberry pi and PC): client and server. The <b>recognize_client.py</b> script will generate a pair of files <b>rate.txt</b> and <b>delay.txt</b>. Each file contains a time series for the previous parameters(rate and delay). I have used the <b>Plotly</b> library for plotting purposes. Open the <b>delay_rate.ipynb</b> in jupyter notebook interface. The notebook is available under the <b>client</b> folder.</p>
 
@@ -262,8 +265,62 @@ $ jupyter notebook
 	<li>Inter-Process communication delay : 7 mSec </li>
 </ul>
 <p> Now, we can compute the average network delay(transmission + propagation) = 30 - 7 = 23 mSec</p>
-<img src="pics/Streaming.jpg" alt="streaming">
+<img src="pics/Streaming.jpg" title="streaming">
 <p> We can also plot the frame rate time series:</p>
-<img src="pics/frame_rate.png" alt="network config">
+<img src="pics/frame_rate.png" title="network configuration">
 <p> Client playout</p>
-<img src="pics/client_playout.png" alt="client playout">
+<img src="pics/client_playout.png" title="client playout">
+<h2> Part Two : Use another raspberry pi to configure it as a zenoh server</h2>
+<p> The figure below shows the train phase of our control vision system built with rasberry pi's that makes a zenoh network</p>
+<img src="pics/Train_Phase1.png" title="Train Phase Raspberry">
+<p> Our control vision system components are : at least Two Raspberry PIs 3 model b+ with are configured in the same way as the the part one show. we need also a servo motor, and a led light. The following image represents the circuit diagram of our zenoh server which consists of 3 components: rapspberry, servo and LED</p>
+<img src="pics/circuit_diagram.png" title="Zenoh Server Circuit Diagram">
+<p> On both client and server sides, After configuring and building zenoh for both devices, you need to run the zenoh daemon in order to make zenoh api calls :</p>
+
+```bash
+$ ./zenohd.exe -v -p tcp/192.168.1.5:7447	# 192.168.1.5 is the ip address of one peer(server for exemple).
+```
+```bash
+$ ./zenohd.exe -v -p tcp/192.168.1.6:7447	# 192.168.1.6 is the ip address of the other peer(client for exemple).
+```
+<p> Our zenoh network is built successfully. Now you need to run your scripts in order to test the control system which works like the following: if a face is being recognized, the raspberry will send a command to the servo to rotate(open a door simulation) and keep opening for 11 seconds. After that the servo will rotate in the other direction simulating a door close.</p>
+<p> Now, lets run the following script at the server side:</p>
+
+```bash
+$ python3 zenoh_server_pi
+```
+<p> You should see the following output on your terminal:</p>
+
+```
+[*] Please train your model !!!
+
+[*] Creating a Zenoh object(locator=None)
+
+[*] Use Workspace on "/training/" to train the model
+
+[*] Use Workspace on "/recognition/" to recognize images
+
+[*] Declaring Subscriber on '/training/*'...
+
+[*] Declaring Subscriber on '/recognition/*'...
+
+[*] Waiting for a new client to connect...
+```
+<p> Now the server is waiting for a client to connect in order to train the model for further recognition purposes. On the other rasberry pi, open your terminal and enter the following command to run the script of the client in order to capture images from the raspberry camera and send them to the server to run the training phase of our model :</p>
+
+```bash
+$ python3 client_train -c 0
+```
+```
+[*] Creating a Zenoh object(locator=None)...
+
+[*] Please enter the camera id and press <return> ==> 1
+
+[*] Sending an image to  /recognition/camera-1
+
+[*] Receiving a recognized image !
+```
+<p> In the same way, as described in part 1, The program will ask for a unique id for the client, then the raspberry pi will start capturing images from the camera and send it to the server in order to recognize the face available in the pictures, send the result back to the client and signal a servo to rotate if the face is recognized by the system.</p>
+<img src="pics/Recognize_Phase1.png" alt="Recognize Phase flowchart model 2">
+
+
