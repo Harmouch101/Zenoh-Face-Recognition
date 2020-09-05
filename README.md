@@ -1,4 +1,4 @@
-<h1>Zenoh Face Recognition On Raspberry Pi</h1>
+<h1>Computer Vision Automated Control Sytem With Zenoh</h1>
 <img src="pics/Train_Phase0.png" title="First Model Trainer">
 <p> This project is a computer vision system control based on Zenoh pub/Sub architecture. the machine learning algorithms used in this project are: the Viola-Jones algorithm for face detection and the local binary pattern histograms(LBPH) for face recognition. For more information about these algorithms, please refer to <a href="https://github.com/Harmouch101/Face-Recogntion-Detection">this repo</a>.
 </p>
