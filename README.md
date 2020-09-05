@@ -287,7 +287,7 @@ $ ./zenohd.exe -v -p tcp/192.168.1.6:7447	# 192.168.1.6 is the ip address of the
 <p> Now, lets run the following script at the server side terminal:</p>
 
 ```bash
-$ python3 zenoh_server_pi
+$ python3 zenoh_server_pi.py
 ```
 <p> You should see the following output on your terminal:</p>
 
@@ -309,7 +309,7 @@ $ python3 zenoh_server_pi
 <p> Now the server is waiting for a client to connect in order to train the model for further recognition purposes. On the other raspberry pi, open your terminal and enter the following command to run the script of the client in order to capture images from the raspberry camera and send them to the server to run the training phase of our model :</p>
 
 ```bash
-$ python3 client_train -c 0
+$ python3 client_train.py -c 0
 ```
 ```
 [*] Creating a Zenoh object(locator=None)...
