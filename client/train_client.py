@@ -22,16 +22,17 @@ class Zenoh_Object():
 		if self._zenoh == None:
 			self.create_zenoh()
 		face_id = input ('\n[*] Please enter the user name and press <return> ==> ')
+		sc_fact = input ('\n[*] please enter the image scale factor (0 < nb < 100) ==> ')
 		print ("\n[*] Initializing the camera, please look at the camera lens and wait ...")
 		while (True):
 			ret, img = video.read()
 			if img is None:
 				break
 			self._Count += 1
-			scaled_Image = self.Manipulate(img)
+			scaled_Image = self.Manipulate(img,sc_fact)
 			encode_param=[int(cv2.IMWRITE_JPEG_QUALITY),90]
 			is_success, im_buf_arr = cv2.imencode(".jpeg", scaled_Image, encode_param)
-			im_buf_str = im_buf_arr.tobytes()
+			im_buf_bytes = im_buf_arr.tobytes()
 			cv2.imshow('sending images',  scaled_Image)
 			k = cv2.waitKey (1) & 0xff
 			if k == 27:
@@ -39,14 +40,15 @@ class Zenoh_Object():
 			if self._Count == 51:
 				break
 			print("\n[*] Publishing image on ",self._train_selector + face_id)
-			self._wk.put(self._train_selector + face_id, Value(im_buf_str, Encoding.RAW))
+			self._wk.put(self._train_selector + face_id, Value(im_buf_bytes, Encoding.RAW))
+			time.sleep(0.1)
 		self._zenoh.logout()
 		video.release()
 		cv2.destroyAllWindows()
 		sys.exit("\n[*] Exiting The Program...")
 
-	def Manipulate(self,img):
-		scale_percent = 50
+	def Manipulate(self,img,scale_percent):
+		scale_percent = int(scale_percent)
 		width = int(img.shape[1] * scale_percent / 100)
 		height = int(img.shape[0] * scale_percent / 100)
 		dim = (width, height)

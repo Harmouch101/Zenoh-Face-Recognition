@@ -34,7 +34,7 @@ class Zenoh_Object():
 			image = change.get_value()
 			if image is None:
 				return
-			image_array = np.fromstring(bytes(image.get_value()),dtype=np.uint8)
+			image_array = np.frombuffer(image.get_value(),dtype=np.uint8)
 			decoded_image = cv2.imdecode(image_array,1)
 			self._stop = time.time()
 			delay = abs(self._stop - self._start)
@@ -58,13 +58,13 @@ class Zenoh_Object():
 		print('\n[*] Sending an image to ',self._recognize_selector + self._camera_id)
 		encode_param=[int(cv2.IMWRITE_JPEG_QUALITY),90]
 		is_success, im_buf_arr = cv2.imencode(".jpeg", frame, encode_param)
-		im_buf_str = im_buf_arr.tobytes()
-		self._frame_length = len(im_buf_str)
+		im_buf_bytes = im_buf_arr.tobytes()
+		self._frame_length = len(im_buf_bytes)
 		self._start = time.time()
-		self._wk.put(self._recognize_selector + self._camera_id, Value(im_buf_str, Encoding.RAW))
+		self._wk.put(self._recognize_selector + self._camera_id, Value(im_buf_bytes, Encoding.RAW))
 		#time.sleep(0.005)
-def Manipulate(img):
-	scale_percent = 20
+def Manipulate(img,scale_percent):
+	scale_percent = int(scale_percent)
 	width = int(img.shape[1] * scale_percent / 100)
 	height = int(img.shape[0] * scale_percent / 100)
 	dim = (width, height)
@@ -102,29 +102,36 @@ if __name__ == "__main__":
 		video = cv2.VideoCapture(video)
 		video.set(3, 640)
 		video.set(4, 480)
+		sc_fact = input ('\n[*] please enter the image scale factor (0 < nb < 100) ==> ')
 		while True:
-			#start = time.start()
+			start = time.time()
 			fps = video.get(cv2.CAP_PROP_FPS)
 			ret, img = video.read()
 			if img is None:
 				break
-			frame = Manipulate(img)
+			frame = Manipulate(img,sc_fact)
 			Zenoh_Object.frame = frame
 			Zenoh_Object.send(frame)
+			stop = time.time()
+			if (stop - start) < (1/fps) :
+				time.sleep( 1/fps -(stop - start))
 	if cam_id != None :
 		camera = cv2.VideoCapture(eval(cam_id))
 		camera.set(3, 640)
 		camera.set(4, 480)
+		sc_fact = input ('\n[*] please enter the image scale factor (0 < nb < 100) ==> ')
 		while True:
-			#start = time.start()
-			#fps = video.get(cv2.CAP_PROP_FPS)
+			start = time.time()
+			fps = 30.0
 			ret, img = camera.read()
 			if img is None:
 				break
-			frame = Manipulate(img)
+			frame = Manipulate(img,sc_fact)
 			#cv2.imshow('frame', frame)
 			#if cv2.waitKey(0) & 0xFF == ord("q"):
 			#	sys.exit(0)
 			Zenoh_Object.frame = frame
 			Zenoh_Object.send(frame)
-			#time.sleep(1/fps)
+			stop = time.time()
+			if (stop - start) < (1/fps) :
+				time.sleep( 1/fps -(stop - start))
